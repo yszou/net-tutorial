@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<title>Engine</title>
+<script type="text/javascript">
+  window.define = function(name, func){
+    const p = func();
+    // engine, Task
+    Object.keys(p).map(k => {
+      window[k] = p[k];
+    });
+  }
+</script>
+<script type="text/javascript" src="http://s.zys.me/js/gen.js"></script>
+</head>
+<body>
+  <button id="btn1">点击1</button>
+  <button id="btn2">点击2</button>
+  <button id="btn3">点击3</button>
+  <button id="btn4">点击4</button>
+
+  <div>点击次数:<span id="result">0</span></div>
+
+  <script type="text/javascript">
+    function bind(dom, callback){
+      const func = event => { callback(func) };
+      dom.addEventListener('click', func);
+    }
+    function unbind(dom, func){
+        dom.removeEventListener('click', func);
+    }
+
+    engine(function*(){
+      const btn1 = document.getElementById('btn1');
+      const btn2 = document.getElementById('btn2');
+      const btn3 = document.getElementById('btn3');
+      const btn4 = document.getElementById('btn4');
+      const result = document.getElementById('result');
+      let count = 0;
+      let func = null;
+      while (true) {
+        func = yield Task(bind, btn1);
+        unbind(btn1, func);
+        count += 1;
+        result.innerHTML = count;
+
+        func = yield Task(bind, btn2);
+        unbind(btn2, func);
+        count += 1;
+        result.innerHTML = count;
+
+        func = yield Task(bind, btn3);
+        unbind(btn3, func);
+        count += 1;
+        result.innerHTML = count;
+      }
+    })();
+  </script>
+</body>
+</html>
+ 
