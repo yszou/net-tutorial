@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+<meta charset="utf-8" />
+<title>Engine</title>
+<link rel="stylesheet" href="https://g.alicdn.com/iic-data-cdn/f-mobile-fog/0.9.0/mobile-fog.min.css" />
+<script type="text/javascript">
+  window.define = function(name, func){
+    const p = func();
+    // engine, Task
+    Object.keys(p).map(k => {
+      window[k] = p[k];
+    });
+  }
+</script>
+<script type="text/javascript" src="https://s.zys.me/js/gen.js"></script>
+<script type="text/javascript" src="https://s.zys.me/js/react/react.min.js"></script>
+<script type="text/javascript" src="https://s.zys.me/js/react/react-dom.min.js"></script>
+<script type="text/javascript" src="https://g.alicdn.com/iic-data-cdn/f-mobile-fog/0.9.0/mobile-fog.min.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+  <script type="text/javascript">
+    window['RENDER'] = function(hut){
+      const Component = window['mobile-fog']['ReactRender'];
+      ReactDOM.render(React.createElement(Component, {data: hut, loadingImg: '-'}), document.getElementById('app'));
+    }
+    RENDER(`
+= LOAD -> COMPONENT
+js: https://dev.g.alicdn.com/iic-data-cdn/f-mobile-fog/0.1.0/ChartPackage.min.js
+css: https://dev.g.alicdn.com/iic-data-cdn/f-mobile-fog/0.1.0/ChartPackage.min.css 
+    `);
+    window.addEventListener('message', e => {
+      const hut = e.data;
+      RENDER(hut);
+    });
+    engine(function*(){
+    })();
+
+  </script>
+  <iframe src="http://localhost:8888/hut" style="position: absolute; margin-left: -9999px;"></iframe>
+</body>
+</html>
+ 

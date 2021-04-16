@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import random
 import time
 import tornado.ioloop
 import tornado.web
@@ -39,11 +40,36 @@ class KeepHandler(tornado.web.RequestHandler):
         self.finish()
 
 
+class HutHandler(tornado.web.RequestHandler):
+    @tornado.gen.coroutine
+    def get(self):
+        hut = '''
+= COMPONENT -> Series ~ data: ^data
+= DATA -> csv #data
+日期 | 值'''
+
+        data = []
+        count = 0
+        while True:
+            yield tornado.gen.sleep(0.2)
+            count += 1
+            data.append('%s | %s' % (count, random.randint(100, 1000)))
+
+            pre = 'window.DATA = `%s`' % (hut + '\n' + '\n'.join(data[-50:]))
+            s = 'parent.postMessage(window.DATA, "*");'
+            s = '<script>%s;%s</script>' % (pre, s)
+            self.write(s)
+            self.flush()
+        self.finish()
+
+
+
 MAP = [
     ('/', DemoHandler),
     ('/async', AsyncHandler),
     ('/sync', SyncHandler),
     ('/keep', KeepHandler),
+    ('/hut', HutHandler),
 ]
 
 if __name__ == '__main__':
